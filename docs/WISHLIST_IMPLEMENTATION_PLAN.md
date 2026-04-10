@@ -147,3 +147,92 @@ const Wishlist = lazy(() => import("./pages/other/Wishlist"));
 8. Heart icon on product cards
 9. Wishlist page
 10. Header icon + count badge
+
+---
+
+## Tickets
+
+**WL-TICKET-01 — Create Wishlist & WishlistItem JPA Entities**
+- Type: Backend
+- Create `Wishlist.java` and `WishlistItem.java` in `sm-core-model`
+- Follow the same patterns as `ShoppingCart` and `ShoppingCartItem`
+- `customerId` and `productId` stored as plain Long columns (loose coupling)
+- Acceptance: Entities exist, Hibernate auto-creates tables on startup
+
+---
+
+**WL-TICKET-02 — Create WishlistRepository**
+- Type: Backend
+- Create `WishlistRepository` in `sm-core`
+- Methods: `findByCustomerIdAndMerchantStore`, `findByWishlistCode`
+- Acceptance: Repository queries return correct results
+
+---
+
+**WL-TICKET-03 — Create WishlistService**
+- Type: Backend
+- Create `WishlistService` interface and `WishlistServiceImpl` in `sm-core`
+- Methods: `getByCustomer`, `addItem`, `removeItem`, `getOrCreate`
+- Acceptance: Service correctly delegates to repository, handles create-if-not-exists logic
+
+---
+
+**WL-TICKET-04 — Create Wishlist API Models**
+- Type: Backend
+- Create `PersistableWishlistItem`, `ReadableWishlistItem`, `ReadableWishlist` in `sm-shop-model`
+- Acceptance: Models serialise/deserialise correctly via Jackson
+
+---
+
+**WL-TICKET-05 — Create WishlistFacade**
+- Type: Backend
+- Create `WishlistFacade` interface and `WishlistFacadeImpl` in `sm-shop`
+- Methods: `getWishlist`, `addToWishlist`, `removeFromWishlist`
+- Enrich items with product name, image, price via `ProductService`
+- Acceptance: Facade returns fully populated `ReadableWishlist`
+
+---
+
+**WL-TICKET-06 — Create WishlistApi REST Controller**
+- Type: Backend
+- Create `WishlistApi` in `sm-shop` under `/api/v1/customer/wishlist`
+- Endpoints: GET (get wishlist), POST (add item), DELETE (remove item)
+- Secured under existing Customer JWT filter chain
+- Acceptance: All 3 endpoints return correct responses, unauthorised requests return 401
+
+---
+
+**WL-TICKET-07 — Create Redux Wishlist Slice**
+- Type: Frontend
+- Create `wishlistReducer.js` and `wishlistActions.js` in `src/redux/`
+- Actions: `getWishlist`, `addToWishlist`, `removeFromWishlist`
+- Add `wishlistData` to `rootReducer.js`, persist `count` to localStorage
+- Acceptance: Redux state updates correctly on all three actions
+
+---
+
+**WL-TICKET-08 — Add Heart Icon to Product Cards & Product Detail Page**
+- Type: Frontend
+- Add wishlist toggle button to product cards and `ProductDescriptionInfo.js`
+- Filled state when product is in wishlist, outline when not
+- Redirect to `/login` if user is not authenticated
+- Acceptance: Icon toggles correctly, unauthenticated users are redirected
+
+---
+
+**WL-TICKET-09 — Create Wishlist Page**
+- Type: Frontend
+- Create `src/pages/other/Wishlist.js`
+- Display saved products with image, name, price, availability
+- "Add to Cart" and "Remove" actions per item
+- Empty state with link to homepage
+- Acceptance: Page renders correctly, all actions work
+
+---
+
+**WL-TICKET-10 — Add Wishlist Icon to Header**
+- Type: Frontend
+- Update `IconGroup.js` to include wishlist heart icon with count badge
+- Navigates to `/wishlist` on click
+- Add `/wishlist` route to `App.js`
+- Acceptance: Icon shows correct count, navigation works
