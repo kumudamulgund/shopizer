@@ -143,7 +143,7 @@ public class ReadableMinimalProductMapper implements Mapper<Product, ReadableMin
 		}
 		
 
-		return null;
+		return destination;
 	}
 
 	private ReadableDescription description(ProductDescription description) {

@@ -73,7 +73,7 @@ public class WishlistApi {
 
     private Customer getAuthCustomer(MerchantStore merchantStore, HttpServletRequest request) {
         String userName = request.getUserPrincipal().getName();
-        Customer customer = customerFacade.getCustomerByNick(userName, merchantStore);
+        Customer customer = customerFacade.getCustomerByUserName(userName, merchantStore);
         if (customer == null) {
             throw new UnauthorizedException();
         }

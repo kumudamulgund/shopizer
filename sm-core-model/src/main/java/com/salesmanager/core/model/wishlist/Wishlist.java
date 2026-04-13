@@ -33,7 +33,7 @@ public class Wishlist extends SalesManagerEntity<Long, Wishlist> implements Audi
     @JoinColumn(name = "MERCHANT_ID", nullable = false)
     private MerchantStore merchantStore;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "wishlist")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "wishlist")
     private Set<WishlistItem> lineItems = new HashSet<>();
 
     @Override
