@@ -236,3 +236,64 @@ const Wishlist = lazy(() => import("./pages/other/Wishlist"));
 - Navigates to `/wishlist` on click
 - Add `/wishlist` route to `App.js`
 - Acceptance: Icon shows correct count, navigation works
+
+---
+
+## Phase 4 — CI Pipeline
+
+### CI-TICKET-01 — GitHub Actions CI/CD for Shopizer Backend (Java)
+
+- Type: DevOps
+- Repo: `kumudamulgund/shopizer`
+- Branch trigger: Push/PR to `3.2.7`
+- Steps:
+  1. Checkout code
+  2. Set up Java 11 (Temurin)
+  3. Cache `~/.m2/repository`
+  4. Build: `./mvnw clean package -DskipTests`
+  5. Run tests: `./mvnw test -DfailIfNoTests=false`
+  6. Login to GitHub Container Registry (GHCR)
+  7. Build Docker image from `sm-shop/Dockerfile`
+  8. Push image to `ghcr.io/kumudamulgund/shopizer:latest` and `:<sha>`
+- Docker push only on push to `3.2.7`, not on PRs
+- Acceptance: Workflow runs on push/PR, tests pass, image is pushed to GHCR
+
+---
+
+### CI-TICKET-02 — GitHub Actions CI/CD for Shopizer React Frontend
+
+- Type: DevOps
+- Repo: `kumudamulgund/shopizer-shop-reactjs`
+- Branch trigger: Push/PR to `main`
+- Steps:
+  1. Checkout code
+  2. Set up Node.js 18
+  3. Cache `node_modules`
+  4. Install deps: `npm ci`
+  5. Build: `npm run build` (with `NODE_OPTIONS=--openssl-legacy-provider`)
+  6. Login to GHCR
+  7. Build Docker image (multi-stage Dockerfile)
+  8. Push image to `ghcr.io/kumudamulgund/shopizer-shop-reactjs:latest` and `:<sha>`
+- Docker push only on push to `main`, not on PRs
+- Acceptance: Workflow runs on push/PR, build succeeds, image is pushed to GHCR
+
+---
+
+### CI-TICKET-03 — GitHub Actions CI/CD for Shopizer Admin (Angular)
+
+- Type: DevOps
+- Repo: `kumudamulgund/shopizer-admin`
+- Branch trigger: Push/PR to `main`
+- Steps:
+  1. Checkout code
+  2. Set up Node.js 14 (Angular 11 requirement)
+  3. Cache `node_modules`
+  4. Install deps: `npm ci`
+  5. Lint: `npm run lint:ci`
+  6. Test: `npm run test -- --watch=false --browsers=ChromeHeadless`
+  7. Build: `npm run build`
+  8. Login to GHCR
+  9. Build Docker image (copies `dist/` into nginx)
+  10. Push image to `ghcr.io/kumudamulgund/shopizer-admin:latest` and `:<sha>`
+- Docker push only on push to `main`, not on PRs
+- Acceptance: Workflow runs on push/PR, lint + tests pass, image is pushed to GHCR
