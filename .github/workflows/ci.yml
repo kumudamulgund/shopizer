@@ -46,7 +46,7 @@ jobs:
           cache: maven
 
       - name: Run unit tests
-        run: ./mvnw test -pl sm-core -DfailIfNoTests=false
+        run: ./mvnw test -pl sm-core -am -DfailIfNoTests=false
 
   integration-tests:
     needs: build
