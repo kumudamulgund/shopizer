@@ -24,7 +24,7 @@ jobs:
           cache: maven
 
       - name: Build
-        run: ./mvnw clean package -DskipTests
+        run: mvn clean package -DskipTests
 
       - name: Upload JAR
         uses: actions/upload-artifact@v4
@@ -46,7 +46,7 @@ jobs:
           cache: maven
 
       - name: Run unit tests
-        run: ./mvnw test -pl sm-core -am -DfailIfNoTests=false
+        run: mvn test -pl sm-core -am -DfailIfNoTests=false
 
   integration-tests:
     needs: build
@@ -62,7 +62,7 @@ jobs:
           cache: maven
 
       - name: Run integration tests
-        run: ./mvnw test -pl sm-shop -am -DfailIfNoTests=false
+        run: mvn test -pl sm-shop -am -DfailIfNoTests=false
 
   docker:
     needs: [unit-tests, integration-tests]
